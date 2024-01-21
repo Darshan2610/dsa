@@ -1,37 +1,19 @@
-#include<stdio.h>
+#include <stdio.h>
 
-//Global variable declaration
-int count = 0;
-//Tower of Hanoi function definition
-
-void TOH(int n,char A,char B,char C)
-
-{
-	if(n>0)
-	{
-		TOH(n-1, A, C, B);
-
-		printf("Disk %d moved from %c --> %c:\n", n, A, C);
-
-		count++;
-
-		TOH(n-1,B,A,C);
-
-	}
-
+void towerOfHanoi(int n, char source, char auxiliary, char target) {
+    if (n > 0) {
+        towerOfHanoi(n - 1, source, target, auxiliary);
+        printf("Move disk %d from %c to %c\n", n, source, target);
+        towerOfHanoi(n - 1, auxiliary, source, target);
+    }
 }
 
-void main()
+int main() {
+    int n = 3; // Number of disks
+    char source = 'A', auxiliary = 'B', target = 'C';
 
-{
-	int n;
+    printf("Tower of Hanoi solution:\n");
+    towerOfHanoi(n, source, auxiliary, target);
 
-	printf("Enter the number of disks:");
-
-	scanf("%d",&n);
-
-	TOH(n,'A','B','C');
-
-	printf("Number of moves taken to move disks from source to destination:  %d",count);
-
+    return 0;
 }
