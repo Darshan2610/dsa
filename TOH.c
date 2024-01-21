@@ -7,11 +7,8 @@ int count = 0;
 void TOH(int n,char A,char B,char C)
 
 {
-
 	if(n>0)
-
 	{
-
 		TOH(n-1, A, C, B);
 
 		printf("Disk %d moved from %c --> %c:\n", n, A, C);
@@ -24,12 +21,9 @@ void TOH(int n,char A,char B,char C)
 
 }
 
-//main function
-
 void main()
 
 {
-
 	int n;
 
 	printf("Enter the number of disks:");
