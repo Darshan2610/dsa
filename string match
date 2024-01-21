@@ -1,0 +1,62 @@
+#include <stdio.h>
+
+#define MAX 100
+
+int stringMatch(char source[], char pattern[], char replace[], char result[]) {
+    int i = 0, j = 0, found = 0;
+
+    while (source[i] != '\0') {
+        if (source[i] == pattern[j]) {
+            j++;
+            if (pattern[j] == '\0') {  // Found the pattern!
+                // Copy replace string into result
+                for (int k = 0; replace[k] != '\0'; k++) {
+                    result[i + k] = replace[k];
+                }
+                i += j;
+                j = 0;
+                found = 1;
+            }
+        } else {
+            result[i] = source[i];  // Copy character from source to result
+            i++;
+            j = 0;  // Reset pattern search
+        }
+    }
+
+    result[i] = '\0';  // Add null terminator to result
+    return found;
+}
+
+// Main function (unchanged)
+int main() {
+  int main() {
+  char source[MAX] = {0}, pattern[MAX] = {0}, replace[MAX] = {0}, result[MAX] = {0};
+  int found;
+
+  // Input source string from the user
+  printf("Enter Source String:\n");
+  scanf("%s", source);
+
+  // Input pattern string from the user
+  printf("Enter Pattern String:\n");
+  scanf("%s", pattern);
+
+  // Input replace string from the user
+  printf("Enter Replace String:\n");
+  scanf("%s", replace);
+
+  // Call the stringMatch function to perform the operation
+  found = stringMatch(source, pattern, replace, result);
+
+  // Display the result based on whether the pattern was found or not
+  if (found == 1) {
+    printf("The Final String is:\n");
+    printf("%s\n", result);
+  } else {
+    printf("Search string Not Found\n");
+  }
+
+  return 0;
+}
+}
