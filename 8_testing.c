@@ -1,188 +1,167 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-// Structure to represent an employee
 typedef struct Employee
 {
     int SSN;
     char Name[50];
     char Dept[50];
     char Designation[50];
-    float Sal;
-    long long int PhNo;
+    int Sal;
+    int PhNo;
     struct Employee *prev;
     struct Employee *next;
-} Employee;
+} Emp;
 
-// Function to create a new employee node
-Employee *createEmployee(int ssn, char *name, char *dept, char *designation, float sal, long long int phNo)
-{
-    Employee *newEmployee = (Employee *)malloc(sizeof(Employee));
-    if (newEmployee == NULL)
-    {
-        printf("Memory allocation failed!\n");
-        exit(EXIT_FAILURE);
+Emp *create();
+Emp *insfront(Emp *, Emp *);
+Emp *insEnd(Emp *, Emp *);
+Emp *delfront(Emp *);
+Emp *delend(Emp *);
+void display(Emp *);
+
+int main (){
+    Emp *head = NULL;
+    int choice, done = 0;
+    while(!done){
+        printf("1=create  2=insfront  3=insend\n4=delfront  5=delend  6=display\n");
+        scanf("%d", &choice);
+        switch(choice){
+            case 1:
+                head = insEnd(head, create());
+                break;
+            case 2: head = insfront(head, create());break;
+            case 3:
+                head = insEnd(head, create());
+                break;
+            case 4:
+                head = delfront(head);
+                break;
+            case 5: head = delend(head);break;
+            case 6: display(head);break;
+            default : done = 1;
+            break;
+        }
     }
-    newEmployee->SSN = ssn;
-    strcpy(newEmployee->Name, name);
-    strcpy(newEmployee->Dept, dept);
-    strcpy(newEmployee->Designation, designation);
-    newEmployee->Sal = sal;
-    newEmployee->PhNo = phNo;
-    newEmployee->prev = NULL;
-    newEmployee->next = NULL;
-    return newEmployee;
+
+    return 0;
 }
 
-// Function to insert a new employee at the end of the DLL
-void insertEnd(Employee **head, Employee *newEmployee)
+Emp *create(){
+    Emp *new = (Emp*)malloc(sizeof(Emp));
+    printf("enter ssn : ");
+    scanf("%d", &new->SSN);
+    printf("enter name : ");
+    scanf("%s", new->Name);
+    printf("enter dept : ");
+    scanf("%s", new->Dept);
+    printf("enter desig : ");
+    scanf("%s", new->Designation);
+    printf("enter sal : ");
+    scanf("%d", &new->Sal);
+    printf("enter phone : ");
+    scanf("%d", &new->PhNo);
+    new->next=NULL;
+    new->prev = NULL;
+    return new;
+}
+
+Emp *insEnd(Emp *head, Emp *new)
 {
-    if (*head == NULL)
+    if (head == NULL)
     {
-        *head = newEmployee;
+        head = new;
     }
     else
     {
-        Employee *temp = *head;
+        Emp *temp = head;
         while (temp->next != NULL)
         {
             temp = temp->next;
         }
-        temp->next = newEmployee;
-        newEmployee->prev = temp;
+        temp->next = new;
+        new->prev = temp;
     }
+    return head;
 }
 
-// Function to display the data of all DLL nodes and count the number of nodes
-void display(Employee *head)
+Emp *insfront(Emp *head, Emp *new)
 {
-    Employee *temp = head;
+    if (head == NULL)
+    {
+        head = new;
+    }
+    else
+    {
+        new->next = head;
+        head->prev = new;
+        head = new;
+    }
+    return head;
+}
+
+Emp *delend(Emp *head)
+{
+    if (head == NULL)
+    {
+        printf("List is empty. Nothing to delete.\n");
+        return head;
+    }
+    Emp *temp = head;
+    Emp *prev = NULL;
+    while (temp->next != NULL)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (prev == NULL)
+    {
+        free(temp);
+        return NULL;
+    }
+    prev->next = NULL;
+    free(temp);
+    return head;
+}
+
+Emp *delfront(Emp *head)
+{
+    if (head == NULL)
+    {
+        printf("List is empty. Nothing to delete.\n");
+        return head;
+    }
+    Emp *temp = head;
+    head = head->next;
+    if (head != NULL)
+    {
+        head->prev = NULL;
+    }
+    free(temp);
+    return head;
+}
+
+void display(Emp *head)
+{
+    printf("Employee List:\n");
     int count = 0;
-    printf("Employee Data:\n");
+    Emp *temp = head;
     while (temp != NULL)
     {
-        printf("SSN: %d, Name: %s, Dept: %s, Designation: %s, Sal: %.2f, PhNo: %lld\n", temp->SSN, temp->Name, temp->Dept, temp->Designation, temp->Sal, temp->PhNo);
-        temp = temp->next;
+        printf("SSN: %d, Name: %s, Dept: %s, Designation: %s, Sal: %d, PhNo: %d\n", temp->SSN, temp->Name, temp->Dept, temp->Designation, temp->Sal, temp->PhNo);
         count++;
+        temp = temp->next;
     }
     printf("Total number of employees: %d\n", count);
 }
 
-// Function to perform insertion at the front of DLL
-void insertFront(Employee **head, Employee *newEmployee)
+void freeList(Emp *head)
 {
-    if (*head == NULL)
+    Emp *temp;
+    while (head != NULL)
     {
-        *head = newEmployee;
-    }
-    else
-    {
-        newEmployee->next = *head;
-        (*head)->prev = newEmployee;
-        *head = newEmployee;
-    }
-}
-
-// Function to delete a node from the end of DLL
-void deleteEnd(Employee **head)
-{
-    if (*head == NULL)
-    {
-        printf("DLL is empty, cannot delete.\n");
-    }
-    else if ((*head)->next == NULL)
-    {
-        free(*head);
-        *head = NULL;
-    }
-    else
-    {
-        Employee *temp = *head;
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        temp->prev->next = NULL;
+        temp = head;
+        head = head->next;
         free(temp);
     }
-}
-
-// Function to delete a node from the front of DLL
-void deleteFront(Employee **head)
-{
-    if (*head == NULL)
-    {
-        printf("DLL is empty, cannot delete.\n");
-    }
-    else
-    {
-        Employee *temp = *head;
-        *head = (*head)->next;
-        if (*head != NULL)
-        {
-            (*head)->prev = NULL;
-        }
-        free(temp);
-    }
-}
-
-int main()
-{
-    Employee *head = NULL;
-    char choice;
-    int ssn;
-    char name[50];
-    char dept[50];
-    char designation[50];
-    float sal;
-    long long int phNo;
-
-    do
-    {
-        printf("\nMenu:\n");
-        printf("a. Create a DLL of N Employees Data\n");
-        printf("b. Display the data of all DLL nodes\n");
-        printf("c. Insertion at End of DLL\n");
-        printf("d. Deletion at End of DLL\n");
-        printf("e. Insertion at Front of DLL\n");
-        printf("f. Deletion at Front of DLL\n");
-        printf("x. Exit\n");
-        printf("Enter your choice: ");
-        scanf(" %c", &choice);
-
-        switch (choice)
-        {
-        case 'a':
-            printf("Enter SSN, Name, Dept, Designation, Sal, PhNo for each employee (separated by space):\n");
-            scanf("%d %s %s %s %f %lld", &ssn, name, dept, designation, &sal, &phNo);
-            insertEnd(&head, createEmployee(ssn, name, dept, designation, sal, phNo));
-            break;
-        case 'b':
-            display(head);
-            break;
-        case 'c':
-            printf("Enter SSN, Name, Dept, Designation, Sal, PhNo for the new employee (separated by space):\n");
-            scanf("%d %s %s %s %f %lld", &ssn, name, dept, designation, &sal, &phNo);
-            insertEnd(&head, createEmployee(ssn, name, dept, designation, sal, phNo));
-            break;
-        case 'd':
-            deleteEnd(&head);
-            break;
-        case 'e':
-            printf("Enter SSN\n, Name\n, Dept\n, Designation\n, Sal\n, PhNo\n for the new employee (separated by space):\n");
-            insertFront(&head, createEmployee(ssn, name, dept, designation, sal, phNo));
-            break;
-        case 'f':
-            deleteFront(&head);
-            break;
-        case 'x':
-            printf("Exiting program.\n");
-            break;
-        default:
-            printf("Invalid choice. Please try again.\n");
-        }
-    } while (choice != 'x');
-
-    return 0;
 }
