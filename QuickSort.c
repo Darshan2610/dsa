@@ -70,7 +70,7 @@ int main()
     printf("input size    time\n");
     for (int i = 0; i < a; i++)
     {
-        n = rand() % 10000 + 5000; // Generate random size between 1 and 50
+        n = 5000 + ((i+1) * 2000); // Generate random size between 1 and 50
 
         int A[n];
         for (int j = 0; j < n; j++)
