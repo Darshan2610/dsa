@@ -65,3 +65,14 @@ int main()
 	}
 	topo_sort(a, n);
 }
+
+//Enter the number of nodes      
+// 5
+// Enter Adjacency matric
+// 0 0 1 0 0  
+// 0 0 1 0 0
+// 0 0 0 1 1
+// 0 0 0 0 1
+// 0 0 0 0 0
+// Indegree Array:0 0 2 1 2       
+// Topological Ordering is:21345
